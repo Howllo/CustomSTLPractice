@@ -73,6 +73,9 @@ public:
      */
     void push_back(T& in_object);
 
+    /**
+     * Used to remove the last element of the array and reduce the array by one.
+     */
     void pop_back();
 
     /**

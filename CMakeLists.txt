@@ -4,9 +4,7 @@ project(Test)
 set(CMAKE_CXX_STANDARD 26)
 
 add_executable(Test main.cpp
-        Standard/VecArray.cpp
         Standard/VecArray.h
         Test/Testing.cpp
         Test/Testing.h
-        Standard/List.cpp
         Standard/List.h)
