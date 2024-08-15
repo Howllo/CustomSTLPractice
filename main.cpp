@@ -1,5 +1,4 @@
 #include <iostream>
-#include <vector>
 #include "Standard/VecArray.h"
 
 void Test(std::string& in_text);
@@ -12,4 +11,10 @@ int main() {
     for(const auto Ele : NewTest) {
         std::cout << Ele << '\n';
     }
+
+    std::cout << "Is Empty: " << NewTest.empty() << '\n';
+
+    NewTest.shrink_to_fit();
+    std::cout << "Shrink Capacity: " << NewTest.capacity() << '\n';
+    NewTest.push_back(2);
 }

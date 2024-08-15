@@ -67,10 +67,17 @@ public:
 
     /**
      * Used to add new element to the array.
-     * @param in_object Take in reference to T type to be
+     * @param item Take in reference to T type to be
      * stored in the array.
      */
-    void push_back(T& in_object);
+    void push_back(const T& item);
+
+    /**
+     * Used to add new element to the array.
+     * @param item Take in reference to T type to be
+     * stored in the array.
+     */
+    void push_back(T&& item);
 
     /**
      * Used to remove the last element of the array and reduce the array by one.
@@ -107,6 +114,7 @@ public:
      * @param idx Take in the location that the array will
      * be access at.
      * @return Return the T type of data at location index.
+     * @throw std::out_of_range If idx is invalid index.
      */
     T& operator[](size_t idx);
 
@@ -179,7 +187,7 @@ public:
     /**
      * Reduces the capacity of the VecArray to the usage size.
      */
-    void strink_to_fit();
+    void shrink_to_fit();
 
 protected:
     /**
@@ -215,6 +223,13 @@ protected:
     void Out_Of_Range(size_t value) const;
 
     /**
+     * Used to add new element to the array.
+     * @param item Take in reference to T type to be
+     * stored in the array.
+     */
+    void push_back_impl(const T& item);
+
+    /**
      * Used to insert an item at any location within the array.
      * @param item Take the element that will be inserted in a location idx.
      * @param idx Take the index location where the item will be inserted.
@@ -238,13 +253,13 @@ size_t VecArray<T>::max_size() const {
 }
 
 template<typename T>
-void VecArray<T>::push_back(T& in_object) {
-    if(LockArray) {
-        return;
-    }
-    CheckAllocation(_size + 1);
+void VecArray<T>::push_back(const T& item) {
+   push_back_impl(item);
+}
 
-    object[_size++] = in_object;
+template<typename T>
+void VecArray<T>::push_back(T &&item) {
+    push_back_impl(std::forward<T>(item));
 }
 
 template<typename T>
@@ -354,7 +369,7 @@ void VecArray<T>::clear() {
 }
 
 template<typename T>
-void VecArray<T>::strink_to_fit() {
+void VecArray<T>::shrink_to_fit() {
     T* Holder = object;
     object = new T[_size];
 
@@ -394,8 +409,19 @@ void VecArray<T>::NewArray(T* OldArray, T* NewArray, const size_t old_size) {
 template<typename T>
 void VecArray<T>::Out_Of_Range(const size_t value) const {
     if(value > _size) {
-        throw std::out_of_range("VecArray<T>::operator[] index is out of range of the used size.");
+        throw std::out_of_range("VecArray<T>::operator[] index is "
+                                "out of range of the used size.");
     }
+}
+
+template<typename T>
+void VecArray<T>::push_back_impl(const T& item) {
+    if(LockArray) {
+        return;
+    }
+    CheckAllocation(_size + 1);
+
+    object[_size++] = item;
 }
 
 template<typename T>
