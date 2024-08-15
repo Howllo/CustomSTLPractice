@@ -8,7 +8,6 @@
 #include <cmath>
 #include <cstdint>
 #include <cmath>
-#include <iostream>
 #include <memory>
 
 template<typename T>
@@ -338,7 +337,6 @@ void VecArray<T>::insert(T &item, const size_t idx) {
 template<typename T>
 T * VecArray<T>::at(size_t loc) {
     Out_Of_Range(loc);
-    
     return object[loc];
 }
 
@@ -349,7 +347,10 @@ bool VecArray<T>::empty() {
 
 template<typename T>
 void VecArray<T>::clear() {
-    std::destroy(begin(), end());
+    for(int i = 0; i < _capacity; ++i) {
+        object[i] = NULL;
+    }
+    _size = 0;
 }
 
 template<typename T>
@@ -360,6 +361,7 @@ void VecArray<T>::strink_to_fit() {
     for(int i = 0; i < _size; i++) {
         object[i] = Holder[i];
     }
+    _capacity = _size;
 }
 
 template<typename T>
